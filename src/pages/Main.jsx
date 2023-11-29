@@ -7,13 +7,13 @@ import { Skeleton } from "../components/Skeleton/Skeleton";
 
 export const Main = () => {
   const [news, setNews] = useState([]);
-  const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchNews = async () => {
       try {
         const res = await getNews();
         setNews(res.news);
-        setLoading(false);
+        setLoading((prev) => !prev);
       } catch (err) {
         console.log(err);
       }
@@ -22,16 +22,9 @@ export const Main = () => {
   }, []);
   return (
     <div className={styles.main}>
-      {news.length > 0 && !isLoading ? (
-        <NewsBanner item={news[0]} />
-      ) : (
-        <Skeleton count={1} type={"banner"} />
-      )}
-      {!isLoading ? (
-        <NewsList news={news} />
-      ) : (
-        <Skeleton count={10} type={"item"} />
-      )}
+      {news.length > 0 ? <NewsBanner item={news[0]} /> : null}
+
+      <NewsList news={news} />
     </div>
   );
 };
