@@ -8,6 +8,7 @@ import { Pagination } from "./../components/Pagination/Pagination";
 
 export const Main = () => {
   const [news, setNews] = useState([]);
+
   const [currentPage, setCurrentPage] = useState([]);
   const [isLoading, setLoading] = useState(true);
 
@@ -55,6 +56,25 @@ export const Main = () => {
       ) : (
         <Skeleton count={10} type={"item"} />
       )}
+
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const res = await getNews();
+        setNews(res.news);
+        setLoading((prev) => !prev);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchNews();
+  }, []);
+  return (
+    <div className={styles.main}>
+      {news.length > 0 ? <NewsBanner item={news[0]} /> : null}
+
+
     </div>
   );
 };
