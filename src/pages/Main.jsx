@@ -81,6 +81,13 @@ export const Main = () => {
       ) : (
         <Skeleton count={10} type={"item"} />
       )}
+
     </div>
   );
+
+
+
+  </div>
+    );
+
 };
