@@ -21,7 +21,7 @@ export const Main = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }; //
   useEffect(() => {
     fetchNews(currentPage);
   }, [currentPage]);
@@ -32,7 +32,7 @@ export const Main = () => {
     }
   };
   const handlePrevPage = () => {
-    if (currentPage > 1) {
+    if (currentPage > totalPages) {
       setCurrentPage(currentPage - 1);
     }
   };
