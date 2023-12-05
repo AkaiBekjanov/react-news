@@ -1,31 +1,51 @@
 import { useEffect, useState } from "react";
 import { NewsBanner } from "../components/NewsBanner/NewsBanner";
 import styles from "./styles.module.css";
-import { getNews } from "../api/api";
+import { getCategories, getNews } from "../api/api";
 import { NewsList } from "../components/NewsList/NewsList";
 import { Skeleton } from "../components/Skeleton/Skeleton";
 import { Pagination } from "./../components/Pagination/Pagination";
+import { Categories } from "../components/Categories/Categories";
 
 export const Main = () => {
   const [news, setNews] = useState([]);
 
   const [currentPage, setCurrentPage] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setLoading] = useState(true);
 
   const totalPages = 10;
-  var pageSize = 10;
+  const pageSize = 10;
   const fetchNews = async (currentPage) => {
     try {
-      const res = await getNews(currentPage, pageSize);
+      const res = await getNews({
+        page_number: currentPage,
+        page_size: pageSize,
+        category: selectedCategory === "All" ? null : selectedCategory,
+      });
       setNews(res.news);
       setLoading(false);
     } catch (err) {
       console.log(err);
     }
   };
+  const fetchCategories = async (currentPage) => {
+    try {
+      const res = await getCategories();
+      setCategories(["All", ...res.categories]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   useEffect(() => {
     fetchNews(currentPage);
-  }, [currentPage]);
+  }, [currentPage, selectedCategory]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -33,7 +53,7 @@ export const Main = () => {
     }
   };
   const handlePrevPage = () => {
-    if (currentPage > 1) {
+    if (currentPage > totalPages) {
       setCurrentPage(currentPage - 1);
     }
   };
@@ -44,6 +64,11 @@ export const Main = () => {
       ) : (
         <Skeleton count={1} type={"banner"} />
       )}
+      <Categories
+        categories={categories}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
       <Pagination
         totalPages={totalPages}
         setCurrentPage={setCurrentPage}
@@ -57,7 +82,12 @@ export const Main = () => {
         <Skeleton count={10} type={"item"} />
       )}
 
+    </div>
+  );
+
+
 
   </div>
     );
+
 };
