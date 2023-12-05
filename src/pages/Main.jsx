@@ -87,7 +87,6 @@ export const Main = () => {
 
 
 
-  </div>
-    );
+
 
 };
